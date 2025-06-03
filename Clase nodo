@@ -1,0 +1,11 @@
+public class nodo<T> {
+    
+    public T dato;
+    public nodo <T> sig, ant;
+
+    public nodo(T dato) {
+        this.dato = dato;
+        sig = ant = null;
+    }
+    
+}
