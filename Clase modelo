@@ -1,0 +1,34 @@
+public class Mercado {
+    
+    public String idUsu;
+    public String correoUsu;
+    public String contraseñaUsu;
+    public String nombreUsu;
+    public String departamentoUsu;
+    public String ciudadUsu;
+    public String celularUsu;
+    public String nombreProdDeseado; // para lista de deseos, por ejemplo
+
+    // Atributos del Producto
+    public String idProd;
+    public String nombreProd;
+    public double precioProd;
+    public int cantidadProd;
+
+    public Mercado(String idUsu, String correoUsu, String contraseñaUsu, String nombreUsu, String departamentoUsu, String ciudadUsu, String celularUsu, String nombreProdDeseado, String idProd, String nombreProd, double precioProd, int cantidadProd) {
+        this.idUsu = idUsu;
+        this.correoUsu = correoUsu;
+        this.contraseñaUsu = contraseñaUsu;
+        this.nombreUsu = nombreUsu;
+        this.departamentoUsu = departamentoUsu;
+        this.ciudadUsu = ciudadUsu;
+        this.celularUsu = celularUsu;
+        this.nombreProdDeseado = nombreProdDeseado;
+        this.idProd = idProd;
+        this.nombreProd = nombreProd;
+        this.precioProd = precioProd;
+        this.cantidadProd = cantidadProd;
+    }
+    
+    
+}
