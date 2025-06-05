@@ -1,0 +1,173 @@
+<?import java.net.URL?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1" fx:controller=".CatalogoController">
+    <stylesheets>
+        <URL value="@catalogo.css" />
+    </stylesheets>
+   <children>
+      <Pane prefHeight="400.0" prefWidth="606.0" style="-fx-background-color: #232323;">
+         <children>
+            <Pane layoutX="17.0" layoutY="128.0" prefHeight="272.0" prefWidth="572.0" style="-fx-background-color: #2E2E2E;">
+               <children>
+                  <Pane layoutX="21.0" layoutY="14.0" prefHeight="110.0" prefWidth="104.0" style="-fx-background-color: WHITE; -fx-background-radius: 15;">
+                     <children>
+                        <ImageView fitHeight="95.0" fitWidth="155.0" layoutX="5.0" layoutY="-14.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../Pictures/Saved%20Pictures/1_control-xbox-series-xsonepc-black-wirelessinalambrico-5292.png" />
+                           </image>
+                        </ImageView>
+                        <Button layoutY="67.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="104.0" style="-fx-background-color: white;" text="CONTROL XBOX SX">
+                           <font>
+                              <Font size="10.0" />
+                           </font>
+                        </Button>
+                        <Label layoutX="21.0" layoutY="88.0" prefHeight="17.0" prefWidth="95.0" text="268.000 COP" textAlignment="CENTER" />
+                     </children>
+                  </Pane>
+                  <Pane layoutX="21.0" layoutY="134.0" prefHeight="110.0" prefWidth="104.0" style="-fx-background-color: WHITE; -fx-background-radius: 15;">
+                     <children>
+                        <ImageView fitHeight="65.0" fitWidth="86.0" layoutX="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../Pictures/Saved%20Pictures/220-B5-0650-V1_LG_1.png" />
+                           </image>
+                        </ImageView>
+                        <Button layoutX="1.0" layoutY="65.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="95.0" style="-fx-background-color: white;" text="EVGA 650W">
+                           <font>
+                              <Font size="10.0" />
+                           </font>
+                        </Button>
+                        <Label layoutX="14.0" layoutY="88.0" text="400.000 COP" textAlignment="CENTER" />
+                     </children>
+                  </Pane>
+                  <Pane layoutX="165.0" layoutY="134.0" prefHeight="110.0" prefWidth="104.0" style="-fx-background-color: WHITE; -fx-background-radius: 15;">
+                     <children>
+                        <ImageView fitHeight="65.0" fitWidth="86.0" layoutX="26.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../Pictures/Saved%20Pictures/ROG-Strix-B650E-F-Gaming.png" />
+                           </image>
+                        </ImageView>
+                        <Button layoutY="65.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="104.0" style="-fx-background-color: white;" text="ASUS ROG B650-F">
+                           <font>
+                              <Font size="10.0" />
+                           </font>
+                        </Button>
+                        <Label layoutX="14.0" layoutY="86.0" text="1.140.000 COP" textAlignment="CENTER" />
+                     </children>
+                  </Pane>
+                  <Pane layoutX="304.0" layoutY="134.0" prefHeight="110.0" prefWidth="104.0" style="-fx-background-color: WHITE; -fx-background-radius: 15;">
+                     <children>
+                        <ImageView fitHeight="52.0" fitWidth="44.0" layoutX="35.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../Pictures/Saved%20Pictures/png-transparent-hard-drives-seagate-barracuda-serial-ata-terabyte-seagate-technology-hard-disk-miscellaneous-electronics-hard-disk-drive-thumbnail.png" />
+                           </image>
+                        </ImageView>
+                        <Button layoutY="67.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="104.0" style="-fx-background-color: white;" text="BARRACUDA 7200">
+                           <font>
+                              <Font size="10.0" />
+                           </font>
+                        </Button>
+                        <Label layoutX="14.0" layoutY="88.0" text="215.000 COP" textAlignment="CENTER" />
+                     </children>
+                  </Pane>
+                  <Pane layoutX="446.0" layoutY="134.0" prefHeight="110.0" prefWidth="104.0" style="-fx-background-color: WHITE; -fx-background-radius: 15;">
+                     <children>
+                        <ImageView fitHeight="95.0" fitWidth="104.0" layoutX="5.0" layoutY="-14.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../Pictures/Saved%20Pictures/DISCO-SOLIDO-SSD-M.2-SAMSUNG-1TB-980-PRO-1.png" />
+                           </image>
+                        </ImageView>
+                        <Button layoutX="1.0" layoutY="67.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="104.0" style="-fx-background-color: white;" text="SAMSUNG 980 1TB">
+                           <font>
+                              <Font size="10.0" />
+                           </font>
+                        </Button>
+                        <Label layoutX="15.0" layoutY="87.0" text="510.000 COP" textAlignment="CENTER" />
+                     </children>
+                  </Pane>
+                  <Pane layoutX="304.0" layoutY="14.0" prefHeight="110.0" prefWidth="104.0" style="-fx-background-color: WHITE; -fx-background-radius: 15;">
+                     <children>
+                        <ImageView fitHeight="55.0" fitWidth="80.0" layoutX="12.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../Pictures/Saved%20Pictures/pd.png" />
+                           </image>
+                        </ImageView>
+                        <Button layoutX="5.0" layoutY="66.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="95.0" style="-fx-background-color: white;" text="RTX 4060 TI">
+                           <font>
+                              <Font size="10.0" />
+                           </font>
+                        </Button>
+                        <Label layoutX="14.0" layoutY="87.0" text="3.274.400 COP" textAlignment="CENTER" />
+                     </children>
+                  </Pane>
+                  <Pane layoutX="446.0" layoutY="14.0" prefHeight="110.0" prefWidth="104.0" style="-fx-background-color: WHITE; -fx-background-radius: 15;">
+                     <children>
+                        <ImageView fitHeight="65.0" fitWidth="86.0" layoutX="9.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../Pictures/Saved%20Pictures/Vengeance_RGB_Pro_PDP_Black_04.png" />
+                           </image>
+                        </ImageView>
+                        <Button layoutX="2.0" layoutY="63.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="104.0" style="-fx-background-color: white;" text="VENGEANCE 3200">
+                           <font>
+                              <Font size="10.0" />
+                           </font>
+                        </Button>
+                        <Label layoutX="16.0" layoutY="84.0" text="325.000 COP" textAlignment="CENTER" />
+                     </children>
+                  </Pane>
+                  <Pane layoutX="165.0" layoutY="14.0" prefHeight="110.0" prefWidth="104.0" style="-fx-background-color: WHITE; -fx-background-radius: 15;">
+                     <children>
+                        <ImageView fitHeight="66.0" fitWidth="95.0" layoutX="5.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../Pictures/Saved%20Pictures/AMD-Ryzen-9-7900X-Unlocked-Desktop-Processor-featured.png" />
+                           </image>
+                        </ImageView>
+                        <Button layoutX="5.0" layoutY="63.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="95.0" style="-fx-background-color: white;" text="AMD RYZEN 9">
+                           <font>
+                              <Font size="10.0" />
+                           </font>
+                        </Button>
+                        <Label layoutX="14.0" layoutY="84.0" text="2.256.000 COP" textAlignment="CENTER" />
+                     </children>
+                  </Pane>
+               </children>
+            </Pane>
+            <ImageView fitHeight="56.0" fitWidth="205.0" layoutX="2.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../Pictures/Screenshots/Captura%20de%20pantalla%202025-06-04%20221517.png" />
+               </image>
+            </ImageView>
+            <TextField layoutX="208.0" layoutY="8.0" prefHeight="33.0" prefWidth="241.0" style="-fx-background-radius: 50; -fx-background-color: #2E2E2E;" />
+            <Button layoutX="423.0" layoutY="8.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="61.0" style="-fx-background-radius: 50; -fx-background-color: #BC0000;" text="Buscar" />
+            <Button graphicTextGap="7.0" layoutX="500.0" layoutY="8.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="36.0" style="-fx-background-image: carro-de-la-compra (1);" />
+            <Button layoutX="552.0" layoutY="8.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="36.0" />
+            <ImageView fitHeight="19.0" fitWidth="134.0" layoutX="14.0" layoutY="54.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../Pictures/Screenshots/Captura%20de%20pantalla%202025-06-04%20224350.png" />
+               </image>
+            </ImageView>
+            <Button layoutX="403.0" layoutY="47.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="188.0" style="-fx-background-radius: 50; -fx-background-color: #232323;" text="Iniciar sesion / Registrarse" textFill="WHITE">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="12.0" />
+               </font>
+            </Button>
+            <Button layoutX="406.0" layoutY="80.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="188.0" style="-fx-background-radius: 50; -fx-background-color: black;" text="Orden predeterminado" textFill="WHITE">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="12.0" />
+               </font>
+            </Button>
+            <Label layoutX="67.0" layoutY="88.0" text="1 - 16 DE RESULTADOS" textFill="WHITE" />
+            <Line endX="557.3999633789062" endY="-1.52587890625E-5" layoutX="49.0" layoutY="72.0" startX="-100.0" stroke="WHITE" />
+            <Line endX="552.3999633789062" endY="-1.1444091796875E-5" layoutX="54.0" layoutY="54.0" startX="-100.0" stroke="WHITE" />
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>
