@@ -1,0 +1,121 @@
+package Vista;
+
+import Controlador.Pila;
+import Modelo.Mercado;
+import java.net.URL;
+import java.util.ResourceBundle;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+import javafx.event.ActionEvent;
+import javafx.scene.control.Button;
+
+/**
+ * FXML Controller class
+ *
+ * @author crist
+ */
+public class LoginController implements Initializable {
+
+    @FXML private TextField txtIdUsu;
+    @FXML private TextField txtNombreUsu;
+    @FXML private TextField txtCorreoUsu;
+    @FXML private TextField txtContraseñaUsu;
+    @FXML private TextField txtDepartamentoUsu;
+    @FXML private TextField txtCiudadUsu;
+    @FXML private TextField txtCelularUsu;
+    
+    @FXML private Button btnIngresar;
+    @FXML private Button btnRegistrar;
+    
+    public Pila controladorPila;  // Cambiamos a usar el controlador Pila
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        controladorPila = new Pila();  // Inicializamos el controlador de pila
+    }
+
+    @FXML
+    public void registrarUsuario() {
+        // Validar campos obligatorios
+        if (txtIdUsu.getText().isEmpty() || txtNombreUsu.getText().isEmpty() || 
+            txtCorreoUsu.getText().isEmpty() || txtContraseñaUsu.getText().isEmpty()) {
+            mostrarAlerta("Error", "Por favor complete todos los campos obligatorios");
+            return;
+        }
+
+        // Crear el nuevo usuario
+        Mercado nuevoUsuario = new Mercado(
+            txtIdUsu.getText(),
+            txtCorreoUsu.getText(),
+            txtContraseñaUsu.getText(),
+            txtNombreUsu.getText(),
+            txtDepartamentoUsu.getText(),
+            txtCiudadUsu.getText(),
+            txtCelularUsu.getText(),
+            "", "", "", 0.0, 0, ""
+        );
+
+        // Insertar el usuario usando el controlador Pila
+        if (controladorPila.insertarUsuario(nuevoUsuario)) {
+            mostrarAlerta("Éxito", "Usuario registrado correctamente");
+            limpiarCampos();
+            
+            // Redirigir a página principal después de registro exitoso
+            irAPaginaPrincipal(null);
+        } else {
+            mostrarAlerta("Error", "El ID de usuario ya existe");
+            txtIdUsu.requestFocus();
+        }
+    }
+
+    private void mostrarAlerta(String titulo, String mensaje) {
+        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(
+            javafx.scene.control.Alert.AlertType.INFORMATION);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
+    }
+
+    private boolean validarCampos() {
+        // Validación de todos los campos requeridos
+        if (txtNombreUsu.getText().isEmpty() || 
+            txtCorreoUsu.getText().isEmpty() ||
+            txtContraseñaUsu.getText().isEmpty()) {
+            
+            mostrarAlerta("Error", "Por favor complete todos los campos obligatorios");
+            return false;
+        }
+        return true;
+    }
+    
+    private void limpiarCampos() {
+        txtIdUsu.clear();
+        txtNombreUsu.clear();
+        txtCorreoUsu.clear();
+        txtContraseñaUsu.clear();
+        txtDepartamentoUsu.clear();
+        txtCiudadUsu.clear();
+        txtCelularUsu.clear();
+    }
+    
+    @FXML
+    private void irAPaginaPrincipal(ActionEvent event) {
+        try {
+            Stage stage;
+            if (event == null) {
+                // Si se llama desde registrarUsuario (event es null)
+                stage = (Stage) txtIdUsu.getScene().getWindow();
+            } else {
+                // Si se llama desde un botón (event no es null)
+                stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+            }
+            GestorVistas.cambiarVista(stage, "RegistrarProd.fxml", "CompuMarket");
+        } catch (Exception e) {
+            mostrarAlerta("Error", "No se pudo cargar la página principal: " + e.getMessage());
+        }
+    }
+}
