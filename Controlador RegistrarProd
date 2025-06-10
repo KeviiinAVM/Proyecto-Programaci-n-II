@@ -1,0 +1,128 @@
+package Vista;
+
+import Controlador.Pila;
+import Controlador.Sesion;
+import Modelo.Mercado;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.Image;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+
+public class RegistrarProdController implements Initializable {
+
+    @FXML private TextField txtIdProd;
+    @FXML private TextField txtNombreProd;
+    @FXML private TextField txtPrecioProd;
+    @FXML private TextField txtCantidadProd;
+    @FXML private ImageView imageView;
+    @FXML private Button btnSubirFoto;
+    @FXML private Button btnIngresarProd;
+
+    public String rutaImagen = "";
+    public final Pila pila = Sesion.pilaProductos; // Pila de productos
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        // Inicialización si hace falta
+    }
+
+    @FXML
+    private void seleccionarImagen() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Seleccionar imagen del producto");
+        fileChooser.getExtensionFilters().add(
+            new FileChooser.ExtensionFilter("Imágenes", "*.png", "*.jpg", "*.jpeg")
+        );
+        File archivo = fileChooser.showOpenDialog(new Stage());
+        if (archivo != null) {
+            rutaImagen = archivo.toURI().toString(); // Guardamos ruta como String
+            imageView.setImage(new Image(rutaImagen));
+        }
+    }
+
+    @FXML
+    private void registrarProducto() {
+        try {
+            String id = txtIdProd.getText();
+            String nombre = txtNombreProd.getText();
+            double precio = Double.parseDouble(txtPrecioProd.getText());
+            int cantidad = Integer.parseInt(txtCantidadProd.getText());
+
+            if (rutaImagen.isEmpty()) {
+                mostrarAlerta("Advertencia", "Debe seleccionar una imagen para el producto.");
+                return;
+            }
+
+            File imagenFile = new File(new URL(rutaImagen).toURI());
+            Mercado producto = pila.crearProd(
+            txtIdProd.getText(),
+            txtNombreProd.getText(),
+            txtPrecioProd.getText(),
+            txtCantidadProd.getText(),
+            imagenFile
+                );
+
+            if (producto != null) {
+                pila.push(producto); // ✅ Agregamos el producto a la pila
+                mostrarAlerta("Éxito", "Producto registrado correctamente.");
+                limpiarCampos();
+            }
+
+        } catch (NumberFormatException e) {
+            mostrarAlerta("Error", "Precio o cantidad no son válidos.");
+        } catch (Exception e) {
+            mostrarAlerta("Error", "Error al registrar producto: " + e.getMessage());
+        }
+    }
+
+    private void limpiarCampos() {
+        txtIdProd.clear();
+        txtNombreProd.clear();
+        txtPrecioProd.clear();
+        txtCantidadProd.clear();
+        imageView.setImage(null);
+        rutaImagen = "";
+    }
+
+    private void mostrarAlerta(String titulo, String mensaje) {
+        Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+        alerta.setTitle(titulo);
+        alerta.setHeaderText(null);
+        alerta.setContentText(mensaje);
+        alerta.showAndWait();
+    }
+
+    @FXML
+private void irPaginaPrincipal(ActionEvent event) {
+    try {
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Vista/PaginaPrincipal.fxml"));
+        Parent root = loader.load();
+
+        // No necesitas llamar a setPilaProductos()
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    } catch (IOException e) {
+        mostrarAlerta("Error", "No se pudo cargar la página principal: " + e.getMessage());
+    }
+}
+
+}
