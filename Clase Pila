@@ -1,0 +1,258 @@
+package Controlador;
+
+import Modelo.*;
+import java.io.File;
+import javafx.scene.control.Alert;
+import javafx.scene.control.TextField;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import java.text.DecimalFormat;
+
+/**
+ *
+ * @author crist
+ */
+public class Pila {
+    public nodo<Mercado> tope;
+    private static final DecimalFormat df = new DecimalFormat("#.##");
+
+    public Pila() {
+        tope = null;
+    }
+
+    // Métodos básicos de pila
+    public boolean getEsVacia() {
+        return tope == null;
+    }
+
+    public int getLongPila() {
+        if (getEsVacia()) return 0;
+        nodo<Mercado> p = tope;
+        int cont = 0;
+        do {
+            cont++;
+            p = p.sig;
+        } while (p != tope);
+        return cont;
+    }
+
+    // Métodos de búsqueda
+    public nodo<Mercado> getBuscarIdProd(String idE) {
+        if (getEsVacia()) return null;
+        nodo<Mercado> p = tope;
+        do {
+            if (p.dato.idProd.equals(idE))
+                return p;
+            p = p.sig;
+        } while (p != tope);
+        return null;
+    }
+    
+    public nodo<Mercado> getBuscarIdUsu(String idE) {
+        if (getEsVacia()) return null;
+        nodo<Mercado> p = tope;
+        do {
+            if (p.dato.idUsu.equals(idE))
+                return p;
+            p = p.sig;
+        } while (p != tope);
+        return null;
+    }
+
+    // Métodos para usuarios
+    public Mercado getCrearUsuario(TextField txtIdUsu, TextField txtNombreUsu, TextField txtCorreoUsu,
+                                 TextField txtContraseñaUsu, TextField txtDepartamentoUsu,
+                                 TextField txtCiudadUsu, TextField txtCelularUsu) {
+        try {
+            if (getBuscarIdUsu(txtIdUsu.getText()) != null) {
+                mostrarAlerta("Error", "El ID del usuario ya existe.");
+                txtIdUsu.clear();
+                txtIdUsu.requestFocus();
+                return null;
+            }
+
+            return new Mercado(
+                txtIdUsu.getText(),
+                txtCorreoUsu.getText(),
+                txtContraseñaUsu.getText(),
+                txtNombreUsu.getText(),
+                txtDepartamentoUsu.getText(),
+                txtCiudadUsu.getText(),
+                txtCelularUsu.getText(),
+                "", "", "", 0.0, 0, ""
+            );
+        } catch (Exception e) {
+            mostrarAlerta("Error", "Error: " + e.getMessage() + "\nNo se creó el usuario.");
+            limpiarCampos(txtIdUsu, txtNombreUsu, txtCorreoUsu, txtContraseñaUsu, 
+                         txtDepartamentoUsu, txtCiudadUsu, txtCelularUsu);
+            txtIdUsu.requestFocus();
+            return null;
+        }
+    }
+
+  public Mercado crearProd(String idProd, String nombreProd, String precioStr, String cantidadStr, File imagenSeleccionada) {
+    try {
+        if (getBuscarIdProd(idProd) != null) {
+            System.out.println("Error: El ID del producto ya existe.");
+            return null;
+        }
+
+        if (nombreProd == null || nombreProd.trim().isEmpty()) {
+            System.out.println("Error: El nombre del producto no puede estar vacío.");
+            return null;
+        }
+
+        double precio = Double.parseDouble(precioStr);
+        int cantidad = Integer.parseInt(cantidadStr);
+        String rutaImagen = (imagenSeleccionada != null) ? imagenSeleccionada.toURI().toString() : "";
+
+        Mercado nuevoProducto = new Mercado(
+            "", "", "", "", "", "", "",   // usuario
+            "",                          // nombreProdDeseado
+            idProd,                      // idProd
+            nombreProd,                  // nombreProd
+            precio,
+            cantidad,
+            rutaImagen
+        );
+
+        System.out.println("Nombre en objeto Mercado: " + nuevoProducto.getNombreProd());
+        return nuevoProducto;
+
+    } catch (NumberFormatException e) {
+        System.out.println("Error de formato numérico: " + e.getMessage());
+    } catch (Exception e) {
+        System.out.println("Error general al crear producto: " + e.getMessage());
+    }
+
+    return null;
+}
+
+
+
+    
+    public void limpiarCampos(TextField... campos) {
+        for (TextField campo : campos) {
+            campo.clear();
+        }
+    }
+
+    public boolean insertarUsuario(Mercado nuevoUsuario) {
+        if (getBuscarIdUsu(nuevoUsuario.idUsu) != null) {
+            return false;
+        }
+        
+        nodo<Mercado> nuevo = new nodo<>(nuevoUsuario);
+        if (getEsVacia()) {
+            tope = nuevo;
+            tope.sig = tope.ant = tope;
+        } else {
+            nuevo.sig = tope;
+            nuevo.ant = tope.ant;
+            tope.ant.sig = nuevo;
+            tope.ant = nuevo;
+            tope = nuevo;
+        }
+        return true;
+    }
+
+    // Métodos para manipulación de la pila
+    public boolean push(Mercado dato) {
+        nodo<Mercado> nuevo = new nodo<>(dato);
+        if (getEsVacia()) {
+            tope = nuevo;
+            tope.sig = tope.ant = tope;
+        } else {
+            nodo<Mercado> base = tope.ant;
+            nuevo.sig = tope;
+            nuevo.ant = base;
+            base.sig = nuevo;
+            tope.ant = nuevo;
+            tope = nuevo;
+        }
+        return true;
+    }
+
+    public void pop() {
+        if (getEsVacia()) {
+            JOptionPane.showMessageDialog(null, "La pila está vacía!");
+        } else if (tope.sig == tope) {
+            tope = null;
+            JOptionPane.showMessageDialog(null, "Elemento desapilado. La pila ahora está vacía.");
+        } else {
+            nodo<Mercado> aux = tope;
+            tope = tope.sig;
+            tope.ant = aux.ant;
+            aux.ant.sig = tope;
+            JOptionPane.showMessageDialog(null, "Elemento desapilado.");
+        }
+    }
+
+    // Métodos para visualización
+    public void setLlenarJTable(JTable tabla) {
+        if (getEsVacia()) return;
+
+        DefaultTableModel modelo = new DefaultTableModel(
+            new String[]{"ID Usuario", "Nombre", "Correo", "Producto", "Precio"}, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        nodo<Mercado> p = tope;
+        do {
+            Mercado m = p.dato;
+            modelo.addRow(new Object[]{
+                m.idUsu, m.nombreUsu, m.correoUsu,
+                m.nombreProd, df.format(m.precioProd)
+            });
+            p = p.sig;
+        } while (p != tope);
+
+        tabla.setModel(modelo);
+    }
+
+    public void mostrarElementos() {
+        if (getEsVacia()) {
+            JOptionPane.showMessageDialog(null, "Pila vacía");
+            return;
+        }
+        StringBuilder sb = new StringBuilder("Contenido de la pila:\n");
+        nodo<Mercado> p = tope;
+        do {
+            sb.append("Usuario: ").append(p.dato.nombreUsu)
+              .append(", Producto: ").append(p.dato.nombreProd)
+              .append(", Precio: $").append(df.format(p.dato.precioProd)).append("\n");
+            p = p.sig;
+        } while (p != tope);
+
+        JOptionPane.showMessageDialog(null, sb.toString());
+    }
+
+    // Métodos utilitarios
+    private void mostrarAlerta(String titulo, String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
+    }
+
+    public double calcularTotal() {
+        if (getEsVacia()) return 0;
+        double total = 0;
+        nodo<Mercado> p = tope;
+        do {
+            total += p.dato.precioProd;
+            p = p.sig;
+        } while (p != tope);
+        return total;
+    }
+
+    public void vaciarPila() {
+        tope = null;
+        JOptionPane.showMessageDialog(null, "Pila vaciada completamente");
+    }
+}
