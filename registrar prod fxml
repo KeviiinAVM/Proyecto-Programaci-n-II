@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Vista.RegistrarProdController">
+   <children>
+      <Pane prefHeight="700.0" prefWidth="900.0" style="-fx-background-color: #232323;">
+         <children>
+            <Pane prefHeight="74.0" prefWidth="900.0" style="-fx-background-color: #000000;">
+               <children>
+                  <Label layoutX="292.0" layoutY="1.0" prefHeight="66.0" prefWidth="483.0" style="-fx-text-fill: white;" text="COMPUMARKET">
+                     <font><Font name="Arial Black" size="50.0" /></font>
+                  </Label>
+                  <ImageView fitHeight="95.0" fitWidth="100.0" layoutX="184.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../../Desktop/COMPUMARKET.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </Pane>
+
+            <Label layoutX="154.0" layoutY="81.0" prefHeight="50.0" prefWidth="375.0" style="-fx-text-fill: white;" text="Registrar producto">
+               <font><Font name="Arial Black" size="33.0" /></font>
+            </Label>
+
+            <Label layoutX="117.0" layoutY="169.0" style="-fx-text-fill: #ffffff;" text="ID" />
+            <TextField fx:id="txtIdProd" layoutX="141.0" layoutY="165.0" prefWidth="200.0" style="-fx-background-color: #D9D9D9;" />
+
+            <Label layoutX="78.0" layoutY="208.0" style="-fx-text-fill: #ffffff;" text="Nombre" />
+            <TextField fx:id="txtNombreProd" layoutX="141.0" layoutY="204.0" prefWidth="200.0" style="-fx-background-color: #D9D9D9;" />
+
+            <Label layoutX="94.0" layoutY="247.0" style="-fx-text-fill: #ffffff;" text="Precio" />
+            <TextField fx:id="txtPrecioProd" layoutX="141.0" layoutY="243.0" prefWidth="80.0" style="-fx-background-color: #D9D9D9;" />
+
+            <Label layoutX="86.0" layoutY="290.0" style="-fx-text-fill: #ffffff;" text="Cantidad" />
+            <TextField fx:id="txtCantidadProd" layoutX="144.0" layoutY="286.0" prefWidth="100.0" style="-fx-background-color: #D9D9D9;" />
+
+            <Button fx:id="btnSubirFoto" layoutX="450.0" layoutY="311.0" onAction="#seleccionarImagen" style="-fx-background-color: #F35E5E; -fx-text-fill: black; -fx-font-weight: bold;" text="Subir foto" />
+
+            <ImageView fx:id="imageView" fitHeight="150.0" fitWidth="200.0" layoutX="417.0" layoutY="142.0" pickOnBounds="true" preserveRatio="true" />
+
+            <Button fx:id="btnIngresarProd" layoutX="185.0" layoutY="352.0" onAction="#registrarProducto" style="-fx-background-color: #F35E5E; -fx-text-fill: black; -fx-font-weight: bold;" text="Ingresar producto" />
+            <Button fx:id="btnIrPaginaPrincipal" layoutX="592.0" layoutY="352.0" onAction="#irPaginaPrincipal" prefHeight="50.0" prefWidth="245.0" style="-fx-background-color: #F35E5E; -fx-text-fill: black; -fx-font-weight: bold;" text="IR AL CATALOGO" />
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>
