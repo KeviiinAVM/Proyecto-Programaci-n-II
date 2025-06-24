@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: #232323;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Vista.CarritoController">
+    
+
+    <children>
+
+        <!-- Grid de productos -->
+        <ScrollPane layoutX="30" layoutY="70" prefHeight="700" prefWidth="1000" style="-fx-background: #232323;">
+            <content>
+                <VBox fx:id="vboxCarrito" prefHeight="465.0" prefWidth="573.0" spacing="10">
+                    <padding>
+                        <Insets bottom="10" left="10" right="10" top="10" />
+                    </padding>
+                </VBox>
+            </content>
+        </ScrollPane>
+
+        <!-- Totales -->
+        <VBox layoutX="654.0" layoutY="94.0" prefHeight="242.0" prefWidth="200" spacing="15" style="-fx-background-color: #2b2b2b;">
+            <padding>
+                <Insets bottom="20" left="20" right="20" top="20" />
+            </padding>
+            <children>
+                <Label style="-fx-text-fill: white; -fx-font-size: 14px;" text="TOTAL DEL CARRITO" />
+                <HBox spacing="10">
+                    <children>
+                        <Label style="-fx-text-fill: white;" text="Subtotal:" />
+                  <Label fx:id="lblSubtotal" prefHeight="26.0" prefWidth="91.0" style="-fx-text-fill: white;" />
+                       
+                    </children>
+                </HBox>
+                <HBox spacing="10">
+                    <children>
+                        <Label style="-fx-text-fill: white;" text="Total:" />
+                  <Label fx:id="lblTotal" prefHeight="26.0" prefWidth="112.0" style="-fx-text-fill: white;" />
+
+                    </children>
+                </HBox>
+                <Button fx:id="btnFinalizar" onAction="#irAFinalizarCompra" style="-fx-background-color: red; -fx-text-fill: white;" text="FINALIZAR COMPRA" />
+            </children>
+        </VBox>
+
+        <!-- Campo cupón -->
+        <HBox layoutX="30" layoutY="490" spacing="10" />
+
+        <!-- Botones inferiores -->
+        <HBox layoutX="600" layoutY="550" spacing="10" />
+          <Button layoutX="630.0" layoutY="493.0" style="-fx-background-color: gray; -fx-text-fill: white;" text="ACTUALIZAR CARRITO" />
+          <Button layoutX="808.0" layoutY="491.0" onAction="#irPaginaPrincipal" style="-fx-background-color: darkred; -fx-text-fill: white;" text="VOLVER" />
+      <Pane layoutX="2.0" layoutY="-8.0" prefHeight="79.0" prefWidth="1043.0" style="-fx-background-color: BLACK;">
+         <children>
+            <Button fx:id="btnIrPaginaPrincipal" layoutX="697.0" layoutY="20.0" onAction="#irPaginaPrincipal" prefHeight="42.0" prefWidth="200.0" style="-fx-background-color: red; -fx-text-fill: white; -fx-font-weight: bold;" text="IR AL CATALOGO" />
+            <Label layoutX="200.0" layoutY="22.0" prefHeight="52.0" prefWidth="347.0" style="-fx-text-fill: white; -fx-font-weight: bold;" text="CARRITO DE COMPRA">
+               <font>
+                  <Font size="27.0" />
+               </font>
+            </Label>
+            <ImageView fitHeight="109.0" fitWidth="129.0" layoutX="14.0" layoutY="-5.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../../Desktop/COMPUMARKET.png" />
+               </image>
+            </ImageView>
+         </children>
+      </Pane>
+
+    </children>
+   
+    
+</AnchorPane>
