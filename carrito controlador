@@ -1,0 +1,168 @@
+package Vista;
+
+import Controlador.Sesion;
+import Modelo.Mercado;
+import Modelo.nodo;
+import java.io.IOException;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
+import javafx.scene.control.Alert;
+import javafx.scene.Node;
+import javafx.stage.Stage;
+import javafx.scene.Scene;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.event.ActionEvent;
+
+import java.net.URL;
+import java.util.ResourceBundle;
+import javafx.geometry.Insets;
+import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
+public class CarritoController implements Initializable {
+
+    @FXML private VBox vboxCarrito;
+    @FXML private Label lblSubtotal;
+    @FXML private Label lblTotal;
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        mostrarProductosDelCarrito();
+    }
+
+    private void mostrarProductosDelCarrito() {
+        vboxCarrito.getChildren().clear();
+
+        if (Sesion.carritoCompra == null || Sesion.carritoCompra.getEsVacia()) {
+            Label vacio = new Label("El carrito está vacío.");
+            vacio.setStyle("-fx-text-fill: white;");
+            vboxCarrito.getChildren().add(vacio);
+            calcularTotales(); // Asegura que los totales estén en 0
+            return;
+        }
+
+        nodo<Mercado> actual = Sesion.carritoCompra.tope;
+
+        do {
+            Mercado producto = actual.dato;
+
+            ImageView imgView = new ImageView();
+            try {
+                imgView.setImage(new Image(producto.rutaImagen, 100, 100, true, true));
+            } catch (Exception e) {
+                imgView.setImage(null);
+            }
+
+            Label lblNombre = new Label(producto.nombreProd);
+            lblNombre.setStyle("-fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold;");
+
+            Label lblPrecio = new Label("Precio: $" + producto.precioProd);
+            lblPrecio.setStyle("-fx-text-fill: white; -fx-font-size: 13px;");
+
+            Button btnEliminar = new Button("Eliminar");
+            btnEliminar.setStyle("-fx-background-color: darkred; -fx-text-fill: white;");
+            nodo<Mercado> nodoAEliminar = actual;
+
+            btnEliminar.setOnAction(e -> {
+                eliminarDelCarrito(nodoAEliminar);
+                mostrarProductosDelCarrito();
+            });
+
+            VBox contenedorProducto = new VBox(5, imgView, lblNombre, lblPrecio, btnEliminar);
+            contenedorProducto.setPadding(new Insets(10));
+            contenedorProducto.setStyle("-fx-background-color: #2E2E2E; -fx-border-color: gray; -fx-border-width: 1px;");
+
+            vboxCarrito.getChildren().add(contenedorProducto);
+
+            actual = actual.sig;
+        } while (actual != Sesion.carritoCompra.tope);
+
+        calcularTotales();
+    }
+
+    private void calcularTotales() {
+        double subtotal = 0.0;
+        nodo<Mercado> actual = Sesion.carritoCompra.tope;
+
+        if (Sesion.carritoCompra.getEsVacia()) {
+            lblSubtotal.setText("$0.00");
+            lblTotal.setText("$0.00");
+            return;
+        }
+
+        do {
+            subtotal += actual.dato.precioProd;
+            actual = actual.sig;
+        } while (actual != Sesion.carritoCompra.tope);
+
+        lblSubtotal.setText(String.format("$%.2f", subtotal));
+        lblTotal.setText(String.format("$%.2f", subtotal));
+    }
+
+    private void eliminarDelCarrito(nodo<Mercado> nodoEliminar) {
+        if (Sesion.carritoCompra.getEsVacia()) return;
+
+        nodo<Mercado> actual = Sesion.carritoCompra.tope;
+
+        if (actual == nodoEliminar && actual.sig == actual) {
+            Sesion.carritoCompra.tope = null;
+            return;
+        }
+
+        do {
+            if (actual == nodoEliminar) {
+                actual.ant.sig = actual.sig;
+                actual.sig.ant = actual.ant;
+                if (Sesion.carritoCompra.tope == actual) {
+                    Sesion.carritoCompra.tope = actual.sig;
+                }
+                break;
+            }
+            actual = actual.sig;
+        } while (actual != Sesion.carritoCompra.tope);
+    }
+
+    @FXML
+    private void irAFinalizarCompra(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Vista/CheckOut.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.centerOnScreen();
+            stage.setResizable(false);
+            stage.show();
+        } catch (IOException e) {
+            mostrarAlerta("Error", "No se pudo cargar la vista de finalización: " + e.getMessage());
+        }
+    }
+
+    
+    @FXML
+    public void irPaginaPrincipal(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Vista/PaginaPrincipal.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            mostrarAlerta("Error", "No se pudo cargar la página principal: " + e.getMessage());
+        }
+    }
+
+    private void mostrarAlerta(String titulo, String mensaje) {
+        Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+        alerta.setTitle(titulo);
+        alerta.setHeaderText(null);
+        alerta.setContentText(mensaje);
+        alerta.showAndWait();
+    }
+}
