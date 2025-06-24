@@ -1,0 +1,28 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package Controlador;
+
+import Modelo.Mercado;
+
+/**
+ *
+ * @author crist
+ */
+public class Sesion {
+    public static Pila pilaProductos = new Pila();
+
+    public static Pila pilaUsuarios = new Pila(); // pila global
+
+    public static Mercado usuarioActual; // ← guarda quién está logueado
+
+    public static Pila carritoCompra = new Pila(); // Cola o Lista
+    
+     public static Pila historialCompras = new Pila(); // Cola o Lista
+
+     public static Pila listaDeseos = new Pila();
+
+}
+
+
