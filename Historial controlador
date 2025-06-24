@@ -1,0 +1,131 @@
+package Vista;
+
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
+import javafx.scene.Node;
+import javafx.scene.control.Alert.AlertType;
+import java.net.URL;
+import java.util.ResourceBundle;
+
+import Controlador.*;
+import Modelo.Mercado;
+import Modelo.nodo;
+import java.io.IOException;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
+public class HistorialController implements Initializable {
+
+    @FXML
+    private VBox vboxCompras;
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        mostrarHistorial();
+    }
+
+    public void mostrarHistorial() {
+        if (Sesion.historialCompras == null || Sesion.historialCompras.getEsVacia()) return;
+
+        vboxCompras.getChildren().clear(); // Limpiar contenido anterior
+
+        nodo<Mercado> actual = Sesion.historialCompras.tope;
+
+        do {
+            Mercado compra = actual.dato;
+
+            // Imagen del producto
+            ImageView imgView = new ImageView();
+            try {
+                imgView.setImage(new Image(compra.rutaImagen, 100, 100, true, true));
+            } catch (Exception e) {
+                imgView.setImage(null);
+            }
+            imgView.setLayoutX(20);
+            imgView.setLayoutY(10);
+
+            // Datos de la compra
+            Label lblEstado = new Label("Entregado");
+            lblEstado.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
+
+            Label lblFecha = new Label("Llegó el 2 de febrero");
+            lblFecha.setStyle("-fx-text-fill: white;");
+
+            Label lblProducto = new Label(compra.nombreProd);
+            lblProducto.setStyle("-fx-text-fill: white;");
+
+            Label lblPrecio = new Label("$" + compra.precioProd);
+            lblPrecio.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
+
+            VBox datos = new VBox(5, lblEstado, lblFecha, lblProducto, lblPrecio);
+            datos.setLayoutX(140);
+            datos.setLayoutY(20);
+
+            // Datos del vendedor
+            Label lblVendedor = new Label("PORDOCENA SAS");
+            lblVendedor.setStyle("-fx-text-fill: white;");
+
+            Label lblMensaje = new Label("Enviar mensaje");
+            lblMensaje.setStyle("-fx-text-fill: white;");
+
+            VBox vendedor = new VBox(5, lblVendedor, lblMensaje);
+            vendedor.setLayoutX(380);
+            vendedor.setLayoutY(30);
+
+            // Botones
+            Button btnVer = new Button("Ver compra");
+            btnVer.setStyle("-fx-background-color: #D90000; -fx-text-fill: white;");
+
+            Button btnRecomprar = new Button("Volver a comprar");
+            btnRecomprar.setStyle("-fx-background-color: #D90000; -fx-text-fill: white;");
+            btnRecomprar.setOnAction(e -> {
+                Sesion.carritoCompra.push(compra);
+                mostrarAlerta("Carrito", "Producto añadido nuevamente al carrito.");
+            });
+
+            VBox botones = new VBox(10, btnVer, btnRecomprar);
+            botones.setLayoutX(650);
+            botones.setLayoutY(30);
+
+            // Panel general
+            Pane tarjeta = new Pane();
+            tarjeta.setPrefSize(800, 120);
+            tarjeta.setStyle("-fx-background-color: #3A3A3A; -fx-background-radius: 10;");
+            tarjeta.getChildren().addAll(imgView, datos, vendedor, botones);
+
+            vboxCompras.getChildren().add(tarjeta);
+
+            actual = actual.sig;
+        } while (actual != Sesion.historialCompras.tope);
+    }
+    
+    
+    @FXML
+private void irCatalogo(javafx.event.ActionEvent event) {
+    try {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Vista/PaginaPrincipal.fxml"));
+        Parent root = loader.load();
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(new Scene(root));
+        stage.show();
+    } catch (IOException e) {
+        mostrarAlerta("Error", "No se pudo cargar el catálogo.");
+    }
+}
+
+    
+    private void mostrarAlerta(String titulo, String mensaje) {
+        Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+        alerta.setTitle(titulo);
+        alerta.setHeaderText(null);
+        alerta.setContentText(mensaje);
+        alerta.showAndWait();
+    }
+}
