@@ -1,0 +1,156 @@
+package Vista;
+
+import Controlador.Pila;
+import Controlador.Sesion;
+import Modelo.Mercado;
+import Modelo.nodo;
+import java.net.URL;
+import java.util.ResourceBundle;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.control.TextField;
+import javafx.scene.control.PasswordField;
+import javafx.stage.Stage;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+
+public class LoginController implements Initializable {
+
+    // Campos registro
+    @FXML private TextField txtIdUsu;
+    @FXML private TextField txtNombreUsu;
+    @FXML private TextField txtCorreoUsu;
+    @FXML private PasswordField txtContraseñaUsu;
+    @FXML private TextField txtDepartamentoUsu;
+    @FXML private TextField txtCiudadUsu;
+    @FXML private TextField txtCelularUsu;
+
+    // Campos login
+    @FXML private TextField txtCorreoI;
+    @FXML private PasswordField txtContraseñaI;
+
+    @FXML private Button btnIngresar;
+    @FXML private Button btnRegistrar;
+
+    public Pila controladorPila = Sesion.pilaUsuarios;
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        // Ya se usa la instancia global de Sesion, no volver a inicializar
+    }
+
+    @FXML
+    public void registrarUsuario() {
+        if (txtIdUsu.getText().isEmpty() || txtNombreUsu.getText().isEmpty() ||
+            txtCorreoUsu.getText().isEmpty() || txtContraseñaUsu.getText().isEmpty()) {
+            mostrarAlerta("Error", "Por favor complete todos los campos obligatorios");
+            return;
+        }
+
+        Mercado nuevoUsuario = new Mercado(
+            txtIdUsu.getText(),
+            txtCorreoUsu.getText(),
+            txtContraseñaUsu.getText(),
+            txtNombreUsu.getText(),
+            txtDepartamentoUsu.getText(),
+            txtCiudadUsu.getText(),
+            txtCelularUsu.getText(),
+            "", "", "", 0.0, 0, ""
+        );
+
+        if (controladorPila.insertarUsuario(nuevoUsuario)) {
+            mostrarAlerta("Éxito", "Usuario registrado correctamente");
+
+            if (txtCorreoI != null && txtContraseñaI != null) {
+                txtCorreoI.setText(txtCorreoUsu.getText());
+                txtContraseñaI.setText(txtContraseñaUsu.getText());
+            }
+
+            limpiarCampos();
+        } else {
+            mostrarAlerta("Error", "El ID de usuario ya existe");
+            txtIdUsu.requestFocus();
+        }
+    }
+
+    @FXML
+    private void iniciarSesion(ActionEvent event) {
+        String correoIngresado = txtCorreoI.getText().trim();
+        String contraseñaIngresada = txtContraseñaI.getText().trim();
+
+        if (correoIngresado.isEmpty() || contraseñaIngresada.isEmpty()) {
+            mostrarAlerta("Error", "Ingrese correo y contraseña");
+            return;
+        }
+
+        if (controladorPila.getEsVacia()) {
+            mostrarAlerta("Error", "No hay usuarios registrados");
+            return;
+        }
+
+        nodo<Mercado> actual = controladorPila.tope;
+        boolean encontrado = false;
+
+        do {
+            Mercado usuario = actual.dato;
+            if (usuario.correoUsu.equals(correoIngresado) &&
+                usuario.contraseñaUsu.equals(contraseñaIngresada)) {
+
+                encontrado = true;
+                
+                Sesion.usuarioActual = usuario;
+
+                // ADMIN
+                if (correoIngresado.toLowerCase().contains("admin")) {
+                    irAVista("/vista/PaginaPrincipal.fxml", event);
+                } else {
+                    irAVista("/vista/PaginaPrincipal.fxml", event);
+                }
+                break;
+            }
+            actual = actual.sig;
+        } while (actual != controladorPila.tope);
+
+        if (!encontrado) {
+            mostrarAlerta("Error", "Correo o contraseña incorrectos");
+        }
+    }
+
+    private void irAVista(String rutaFXML, ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(rutaFXML));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.centerOnScreen();
+            stage.setResizable(false);
+            stage.show();
+        } catch (Exception e) {
+            mostrarAlerta("Error", "Error al cargar vista: " + e.getMessage());
+        }
+    }
+
+    private void limpiarCampos() {
+        txtIdUsu.clear();
+        txtNombreUsu.clear();
+        txtCorreoUsu.clear();
+        txtContraseñaUsu.clear();
+        txtDepartamentoUsu.clear();
+        txtCiudadUsu.clear();
+        txtCelularUsu.clear();
+    }
+
+    private void mostrarAlerta(String titulo, String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
+    }
+}
