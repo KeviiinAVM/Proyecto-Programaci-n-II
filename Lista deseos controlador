@@ -1,0 +1,156 @@
+package Vista;
+
+import Controlador.Sesion;
+import Modelo.Mercado;
+import Modelo.nodo;
+import java.io.IOException;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
+
+import java.net.URL;
+import java.util.ResourceBundle;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
+public class ListaDeseosController implements Initializable {
+
+    @FXML
+    private GridPane gridDeseos;
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        mostrarListaDeseos();
+    }
+
+    public void mostrarListaDeseos() {
+        gridDeseos.getChildren().clear(); 
+        
+        if (Sesion.listaDeseos == null || Sesion.listaDeseos.getEsVacia()) {
+        Label vacio = new Label("La lista de deseos está vacía.");
+        vacio.setStyle("-fx-text-fill: white; -fx-font-size: 16px;");
+        gridDeseos.add(vacio, 0, 0); // lo agrega en la posición inicial
+        return;
+    }
+
+    nodo<Mercado> actual = Sesion.listaDeseos.tope;
+    int col = 0, row = 0;
+
+        do {
+            Mercado producto = actual.dato;
+
+            // Imagen
+            ImageView img = new ImageView();
+            try {
+                img.setImage(new Image(producto.rutaImagen, 100, 100, true, true));
+            } catch (Exception e) {
+                img.setImage(null);
+            }
+            img.setLayoutX(10);
+            img.setLayoutY(10);
+
+            // Info
+            Label lblNombre = new Label(producto.nombreProd);
+            lblNombre.setStyle("-fx-text-fill: white;");
+
+            Label lblPrecio = new Label(producto.precioProd + " COP");
+            lblPrecio.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
+
+            Button btnAgregarCarrito = new Button("Añadir al carrito 🛒");
+            btnAgregarCarrito.setStyle("-fx-background-color: #D90000; -fx-text-fill: white;");
+            btnAgregarCarrito.setOnAction(e -> {
+                Sesion.carritoCompra.push(producto);
+                mostrarAlerta("Carrito", "Producto añadido al carrito.");
+            });
+
+            nodo<Mercado> nodoActual = actual; // ← esta línea vincula el nodo actual
+
+            Button btnEliminar = new Button("X"); // botón eliminar
+            btnEliminar.setOnAction(e -> {
+            eliminarDeListaDeseos(nodoActual); // método que tú debes definir
+            mostrarListaDeseos(); // refresca el contenido visual
+            });
+
+
+            HBox acciones = new HBox(10, btnAgregarCarrito, btnEliminar);
+            VBox datos = new VBox(5, lblNombre, lblPrecio, acciones);
+            datos.setLayoutX(120);
+            datos.setLayoutY(20);
+
+            Pane tarjeta = new Pane();
+            tarjeta.setPrefSize(380, 150);
+            tarjeta.setStyle("-fx-background-color: #3A3A3A; -fx-background-radius: 10;");
+            tarjeta.getChildren().addAll(img, datos);
+
+            gridDeseos.add(tarjeta, col, row);
+
+            col++;
+            if (col == 2) {
+                col = 0;
+                row++;
+            }
+
+            actual = actual.sig;
+        } while (actual != Sesion.listaDeseos.tope);
+    }
+
+    
+private void eliminarDeListaDeseos(nodo<Mercado> nodoEliminar) {
+    if (Sesion.listaDeseos.getEsVacia()) return;
+
+    nodo<Mercado> actual = Sesion.listaDeseos.tope;
+
+    // Caso único
+    if (actual == nodoEliminar && actual.sig == actual) {
+        Sesion.listaDeseos.tope = null;
+        return;
+    }
+
+    do {
+        if (actual == nodoEliminar) {
+            actual.ant.sig = actual.sig;
+            actual.sig.ant = actual.ant;
+            if (Sesion.listaDeseos.tope == actual) {
+                Sesion.listaDeseos.tope = actual.sig;
+            }
+            break;
+        }
+        actual = actual.sig;
+    } while (actual != Sesion.listaDeseos.tope);
+}
+
+    
+    
+    private void mostrarAlerta(String titulo, String mensaje) {
+        javafx.scene.control.Alert alerta = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
+        alerta.setTitle(titulo);
+        alerta.setHeaderText(null);
+        alerta.setContentText(mensaje);
+        alerta.showAndWait();
+    }
+    
+    
+        @FXML
+    private void irCatalogo(javafx.event.ActionEvent event) {
+    try {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Vista/PaginaPrincipal.fxml"));
+        Parent root = loader.load();
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(new Scene(root));
+        stage.show();
+    } catch (IOException e) {
+        mostrarAlerta("Error", "No se pudo cargar el catálogo.");
+    }
+}
+    
+    
+}
