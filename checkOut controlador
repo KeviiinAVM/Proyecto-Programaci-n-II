@@ -1,0 +1,157 @@
+package Vista;
+
+import Controlador.Sesion;
+import Modelo.Mercado;
+import Modelo.nodo;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.scene.Node;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class CheckOutController implements Initializable {
+
+    // Campos usuario
+    @FXML private TextField txtNombre;
+    @FXML private TextField txtCorreo;
+    @FXML private TextField txtTel;
+    @FXML private TextField txtDepartamento;
+    @FXML private TextField txtCiudad;
+
+    // Grid para productos
+    @FXML private GridPane gridProductos;
+
+    // Total y Subtotal
+    @FXML private Label lblSubtotal;
+    @FXML private Label lblTotal;
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        cargarDatosUsuario();
+        mostrarProductosCarrito();
+        calcularTotales();
+    }
+
+    private void cargarDatosUsuario() {
+        Mercado usuario = Sesion.usuarioActual;
+        if (usuario != null) {
+            txtNombre.setText(usuario.nombreUsu);
+            txtCorreo.setText(usuario.correoUsu);
+            txtTel.setText(usuario.celularUsu);
+            txtDepartamento.setText(usuario.departamentoUsu);
+            txtCiudad.setText(usuario.ciudadUsu);
+        }
+    }
+
+    private void mostrarProductosCarrito() {
+        gridProductos.getChildren().clear();
+        nodo<Mercado> actual = Sesion.carritoCompra.tope;
+        int col = 0, row = 0;
+
+        if (Sesion.carritoCompra.getEsVacia()) return;
+
+        do {
+            Mercado producto = actual.dato;
+
+            ImageView imagen = new ImageView();
+            try {
+                imagen.setImage(new Image(producto.rutaImagen, 100, 100, true, true));
+            } catch (Exception e) {
+                imagen.setImage(null);
+            }
+
+            Label nombre = new Label(producto.nombreProd);
+            nombre.setStyle("-fx-text-fill: white;");
+
+            VBox contenedor = new VBox(5, imagen, nombre);
+            contenedor.setPadding(new Insets(10));
+            contenedor.setStyle("-fx-background-color: #2E2E2E; -fx-border-color: gray; -fx-border-radius: 8px;");
+
+            gridProductos.add(contenedor, col, row);
+
+            col++;
+            if (col == 3) {
+                col = 0;
+                row++;
+            }
+
+            actual = actual.sig;
+        } while (actual != Sesion.carritoCompra.tope);
+    }
+
+    private void calcularTotales() {
+        double subtotal = 0.0;
+        nodo<Mercado> actual = Sesion.carritoCompra.tope;
+
+        if (Sesion.carritoCompra.getEsVacia()) {
+            lblSubtotal.setText("Subtotal: $0");
+            lblTotal.setText("Total: $0");
+            return;
+        }
+
+        do {
+            subtotal += actual.dato.precioProd;
+            actual = actual.sig;
+        } while (actual != Sesion.carritoCompra.tope);
+
+        double total = subtotal; // Puedes agregar IVA/envío si deseas
+
+        lblSubtotal.setText(String.format("Subtotal: $%.2f", subtotal));
+        lblTotal.setText(String.format("Total: $%.2f", total));
+    }
+
+    @FXML
+    private void realizarCompra(ActionEvent event) {
+        // Pasar todo lo del carrito al historial
+        nodo<Mercado> actual = Sesion.carritoCompra.tope;
+
+        if (Sesion.carritoCompra.getEsVacia()) {
+            mostrarAlerta("Carrito vacío", "No hay productos para comprar.");
+            return;
+        }
+
+        do {
+            Sesion.historialCompras.push(actual.dato);
+            actual = actual.sig;
+        } while (actual != Sesion.carritoCompra.tope);
+
+        Sesion.carritoCompra = new Controlador.Pila(); // Vaciar carrito
+
+        mostrarAlerta("Compra realizada", "Gracias por tu compra. Volviendo al catálogo.");
+        irCatalogo(event);
+    }
+
+    @FXML
+    private void irCatalogo(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Vista/PaginaPrincipal.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.centerOnScreen();
+            stage.show();
+        } catch (Exception e) {
+            mostrarAlerta("Error", "No se pudo cargar el catálogo.");
+        }
+    }
+
+    private void mostrarAlerta(String titulo, String mensaje) {
+        Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+        alerta.setTitle(titulo);
+        alerta.setHeaderText(null);
+        alerta.setContentText(mensaje);
+        alerta.showAndWait();
+    }
+}
